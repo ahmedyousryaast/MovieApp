@@ -24,8 +24,11 @@ import java.util.concurrent.ExecutionException;
 
 /**
  * A simple {@link Fragment} subclass.
+ *
+ * reminder : add comments to this class
  */
 public class MoviesFragment extends Fragment {
+    View rootView;
     //arrayList to hold the list of movies
     ArrayList<Movies> movies;
 
@@ -36,17 +39,7 @@ public class MoviesFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-        /**
-         * while testing the app , the app used to crash when there is
-         * no available network , so a network check runs first before
-         * running the AsyncTask to get the data from the server
-         */
-        if(checkNetwork()) {
-            displayGrid();
-        }
-        else{
-            Toast.makeText(getActivity(),"there is no network connection",Toast.LENGTH_SHORT).show();
-        }
+
     }
 
     /**
@@ -59,16 +52,7 @@ public class MoviesFragment extends Fragment {
         String sortMethod = sharedPreferences.getString(getString(R.string.sort_key),getString(R.string.sort_pop));
         try {
             movies = task.execute(sortMethod).get();
-            MovieAdapter adapter = new MovieAdapter(getActivity(),R.layout.grid_item_poster,R.id.grid_item_id,movies);
-            GridView grid = (GridView) getActivity().findViewById(R.id.grid_view_id);
-            grid.setAdapter(adapter);
-
-            grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-                @Override
-                public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    showDetails(position);
-                }
-            });
+            createComponents();
         } catch (InterruptedException e) {
             e.printStackTrace();
         } catch (ExecutionException e) {
@@ -100,12 +84,56 @@ public class MoviesFragment extends Fragment {
         setHasOptionsMenu(true);
     }
 
+    /**
+     * i override this fragment lifecycle method
+     * in order to avoid losing movies data in case of
+     * screen rotation and to enhance my app performance
+     * and avoid making more network calls
+     * @param outState
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelableArrayList("moviesArrayList",movies);
+
+    }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
-        // Inflate the layout for this fragment
-        return inflater.inflate(R.layout.fragment_movies, container, false);
+        rootView = inflater.inflate(R.layout.fragment_movies, container, false);
+
+        if(savedInstanceState == null || ! savedInstanceState.containsKey("moviesArrayList")){
+            /**
+             * while testing the app , the app used to crash when there is
+             * no available network , so a network check runs first before
+             * running the AsyncTask to get the data from the server
+             */
+            if(checkNetwork()) {
+                displayGrid();
+            }
+            else{
+                Toast.makeText(getActivity(),"there is no network connection",Toast.LENGTH_SHORT).show();
+            }
+        }else {
+            movies = savedInstanceState.getParcelableArrayList("moviesArrayList");
+            createComponents();
+
+        }
+        return rootView;
     }
+
+    private void createComponents() {
+        MovieAdapter adapter = new MovieAdapter(getActivity(),R.layout.grid_item_poster,R.id.grid_item_id,movies);
+        GridView grid = (GridView) rootView.findViewById(R.id.grid_view_id);
+        grid.setAdapter(adapter);
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showDetails(position);
+            }
+        });
+    }
+
 
 }
