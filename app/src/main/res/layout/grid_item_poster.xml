@@ -1,0 +1,13 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--this file contains a component that represents each grid item -->
+<ImageView xmlns:android="http://schemas.android.com/apk/res/android"
+           android:id="@+id/grid_item_id"
+           android:layout_width="match_parent"
+           android:layout_height="match_parent"
+           android:scaleType="centerCrop"
+           android:clickable="false"
+           android:focusable="false">
+    <!--clickable and focusable items both were set to false according to a question in
+    stackoverflow.com as i was having a problem while trying to get the position of the clicked item
+    and here is a link to the question : http://stackoverflow.com/questions/24889863/getting-a-position-of-clicked-item-in-gridview-->
+</ImageView>
