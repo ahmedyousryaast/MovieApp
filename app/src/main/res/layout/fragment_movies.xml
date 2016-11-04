@@ -1,0 +1,16 @@
+<!--this is the main fragment layout file and it contains the gridview component
+which will represent out grid of photos-->
+<FrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+             xmlns:tools="http://schemas.android.com/tools"
+             android:layout_width="match_parent"
+             android:layout_height="match_parent"
+             tools:context="com.example.ahmed.movieapp.MoviesFragment">
+
+    <GridView
+        android:id="@+id/grid_view_id"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:numColumns="2"
+        android:stretchMode="columnWidth"/>
+
+</FrameLayout>
