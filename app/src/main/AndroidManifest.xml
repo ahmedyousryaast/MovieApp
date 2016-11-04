@@ -2,9 +2,11 @@
 <manifest xmlns:android="http://schemas.android.com/apk/res/android"
           package="com.example.ahmed.movieapp">
 
-    <uses-permission android:name="android.permission.INTERNET" />
-    <!--this permission is required in order to check for available internet connection
-    because the app produced an exception when i tried to run it without available network connection-->
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <!--
+    this permission is required in order to check for available internet connection
+    because the app produced an exception when i tried to run it without available network connection
+    -->
     <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE"/>
 
     <application
@@ -20,13 +22,16 @@
                 <category android:name="android.intent.category.LAUNCHER"/>
             </intent-filter>
         </activity>
+
         <activity
             android:name=".SettingsActivity"
             android:label="@string/title_activity_settings"
             android:parentActivityName=".MainActivity">
             <meta-data
                 android:name="android.support.PARENT_ACTIVITY"
-                android:value="com.example.ahmed.movieapp.MainActivity" />
+                android:value="com.example.ahmed.movieapp.MainActivity"/>
+        </activity>
+        <activity android:name=".DetailsActivity">
         </activity>
     </application>
 

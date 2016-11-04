@@ -103,4 +103,16 @@ public class Movies implements Serializable{
         mId = id;
     }
 
+    @Override
+    public String toString() {
+        return "Movies{" +
+                "mPoster='" + mPoster + '\'' +
+                ", mDate='" + mDate + '\'' +
+                ", mTitle='" + mTitle + '\'' +
+                ", mOverview='" + mOverview + '\'' +
+                ", mBackdrop='" + mBackdrop + '\'' +
+                ", mVoteAvg='" + mVoteAvg + '\'' +
+                ", mId='" + mId + '\'' +
+                '}';
+    }
 }

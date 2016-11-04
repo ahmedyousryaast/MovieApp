@@ -1,6 +1,7 @@
 package com.example.ahmed.movieapp;
 
 
+import android.content.Intent;
 import android.content.SharedPreferences;
 import android.graphics.Movie;
 import android.net.ConnectivityManager;
@@ -9,6 +10,7 @@ import android.os.Bundle;
 import android.preference.PreferenceManager;
 import android.support.annotation.Nullable;
 import android.support.v4.app.Fragment;
+import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
@@ -47,6 +49,10 @@ public class MoviesFragment extends Fragment {
         }
     }
 
+    /**
+     * this method's job is to display the movie posters.
+     *
+     */
     private void displayGrid() {
         MoviesBackgroundTask task = new MoviesBackgroundTask();
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
@@ -60,7 +66,7 @@ public class MoviesFragment extends Fragment {
             grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
                 @Override
                 public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                    //showDetails(position);
+                    showDetails(position);
                 }
             });
         } catch (InterruptedException e) {
@@ -68,6 +74,14 @@ public class MoviesFragment extends Fragment {
         } catch (ExecutionException e) {
             e.printStackTrace();
         }
+    }
+
+    private void showDetails(int position) {
+        Log.d("tag","hereeeee");
+        Intent intent = new Intent(getActivity(),DetailsActivity.class);
+        intent.putExtra("movie",movies.get(position));
+        Log.d("tag",movies.get(position).toString());
+        startActivity(intent);
     }
 
     /**
