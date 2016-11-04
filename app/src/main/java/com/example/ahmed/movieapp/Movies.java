@@ -1,13 +1,16 @@
 package com.example.ahmed.movieapp;
 
 
+import android.os.Parcel;
+import android.os.Parcelable;
+
 import java.io.Serializable;
 
 /**
  * Created by Ahmed on 10/9/2016.
  * this class represents a movies and its details
  */
-public class Movies implements Serializable{
+public class Movies implements Parcelable{
 
     private String mPoster,mDate,mTitle,mOverview,mBackdrop,mVoteAvg , mId;
 
@@ -32,6 +35,44 @@ public class Movies implements Serializable{
         this.mVoteAvg = mVoteAvg;
         this.mId = mId;
     }
+
+    protected Movies(Parcel in) {
+        mPoster = in.readString();
+        mDate = in.readString();
+        mTitle = in.readString();
+        mOverview = in.readString();
+        mBackdrop = in.readString();
+        mVoteAvg = in.readString();
+        mId = in.readString();
+    }
+
+    @Override
+    public void writeToParcel(Parcel dest, int flags) {
+        dest.writeString(mPoster);
+        dest.writeString(mDate);
+        dest.writeString(mTitle);
+        dest.writeString(mOverview);
+        dest.writeString(mBackdrop);
+        dest.writeString(mVoteAvg);
+        dest.writeString(mId);
+    }
+
+    @Override
+    public int describeContents() {
+        return 0;
+    }
+
+    public static final Creator<Movies> CREATOR = new Creator<Movies>() {
+        @Override
+        public Movies createFromParcel(Parcel in) {
+            return new Movies(in);
+        }
+
+        @Override
+        public Movies[] newArray(int size) {
+            return new Movies[size];
+        }
+    };
 
     //returns the value of mPoster
     public String getPoster() {

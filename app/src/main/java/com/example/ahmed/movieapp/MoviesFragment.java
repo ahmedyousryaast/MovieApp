@@ -77,10 +77,8 @@ public class MoviesFragment extends Fragment {
     }
 
     private void showDetails(int position) {
-        Log.d("tag","hereeeee");
         Intent intent = new Intent(getActivity(),DetailsActivity.class);
         intent.putExtra("movie",movies.get(position));
-        Log.d("tag",movies.get(position).toString());
         startActivity(intent);
     }
 

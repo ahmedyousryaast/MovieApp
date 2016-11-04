@@ -36,7 +36,7 @@ public class DetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_details, container, false);
         //retrieving the object from the intent
-        Movies movie = (Movies) getActivity().getIntent().getSerializableExtra("movie");
+        Movies movie = (Movies) getActivity().getIntent().getParcelableExtra("movie");
         //retrieving the views from the layout and add the details from the object to it
         styling(movie);
         // Inflate the layout for this fragment
