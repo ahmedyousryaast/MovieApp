@@ -44,5 +44,13 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/overview_details"/>
 
+        <LinearLayout
+            android:layout_below="@id/backdrop_details"
+            android:id="@+id/trailers_linear_layout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+
+
     </RelativeLayout>
 </ScrollView>

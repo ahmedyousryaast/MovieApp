@@ -1,7 +1,9 @@
 package com.example.ahmed.movieapp;
 
 
-import android.graphics.Movie;
+import android.content.Intent;
+import android.net.ConnectivityManager;
+import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
 import android.support.v4.app.Fragment;
@@ -10,9 +12,14 @@ import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ImageView;
+import android.widget.LinearLayout;
 import android.widget.TextView;
+import android.widget.Toast;
 
 import com.squareup.picasso.Picasso;
+
+import java.util.ArrayList;
+import java.util.concurrent.ExecutionException;
 
 
 /**
@@ -27,23 +34,57 @@ public class DetailsFragment extends Fragment {
      */
     View rootView;
 
+    //this arraylist holds the list of trailers
+    ArrayList<Trailer> trailers;
+
+    //this movie object holds the movie returen from the intent
+    Movies movie;
+
+    final String BASE_URL = "https://www.youtube.com/watch";
+    final String Query_param_v ="v";
+
     public DetailsFragment() {
     }
-
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_details, container, false);
         //retrieving the object from the intent
-        Movies movie = (Movies) getActivity().getIntent().getParcelableExtra("movie");
-        //retrieving the views from the layout and add the details from the object to it
-        styling(movie);
-        // Inflate the layout for this fragment
+        movie = (Movies) getActivity().getIntent().getParcelableExtra("movie");
+
+
+        if(checkNetwork()) {
+            try {
+                getTrailersList();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            }
+            //retrieving the views from the layout and add the details from the object to it
+            styling();
+        }
+        else{
+            Toast.makeText(getActivity(),"there is no network connection",Toast.LENGTH_SHORT).show();
+        }
+
         return rootView;
     }
 
-    private void styling(Movies movie) {
+    private void getTrailersList() throws ExecutionException, InterruptedException {
+        TrailersBackgroundTask task = new TrailersBackgroundTask();
+        trailers = task.execute(movie.getId()).get();
+    }
+
+    private boolean checkNetwork() {
+        ConnectivityManager manager = (ConnectivityManager)getActivity().getSystemService(getActivity().getApplicationContext().CONNECTIVITY_SERVICE);
+        NetworkInfo networkinfo = manager.getActiveNetworkInfo();
+        return networkinfo != null && networkinfo.isConnected();
+    }
+
+    private void styling() {
 
         //base url to use when creating a uri object to get the images urls
         String Base_URL = "http://image.tmdb.org/t/p/w185";
@@ -70,6 +111,64 @@ public class DetailsFragment extends Fragment {
         Picasso.with(getActivity()).load(posterURL).into(poster);
         Picasso.with(getActivity()).load(backdropURL).into(backdrop);
 
+        displayTrailersList();
+//        createTrailersListDummy();
+
     }
+
+    private void displayTrailersList() {
+        final ArrayList<Trailer> temp = trailers;
+        View movieTrailerRow;
+        LinearLayout linear = (LinearLayout) rootView.findViewById(R.id.trailers_linear_layout);
+        for(int i = 0 ; i < trailers.size();i++){
+            movieTrailerRow = LayoutInflater.from(getActivity()).inflate(R.layout.trailers_item,null);
+            TextView text = (TextView) movieTrailerRow.findViewById(R.id.trailers_item_id);
+            text.setText("Trailer "+(i+1));
+            final int finalI = i;
+            text.setOnClickListener(new View.OnClickListener() {
+                @Override
+                public void onClick(View view) {
+
+                    //https://developer.android.com/guide/components/intents-common.html#Browser
+                    Uri path = Uri.parse(BASE_URL).buildUpon()
+                            .appendQueryParameter(Query_param_v,trailers.get(finalI).getKey()).build();
+                    Intent intent = new Intent(Intent.ACTION_VIEW, path);
+                    if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
+                        startActivity(intent);
+                    }
+                }
+            });
+            linear.addView(text);
+        }
+
+    }
+
+
+//    private void createTrailersListDummy() {
+//        //dummy data
+//        ArrayList<String>dummy = new ArrayList<String>();
+//        dummy.add("trailer 1");
+//        dummy.add("trailer 2");
+//        dummy.add("trailer 3");
+//        View movieTrailerRow;
+//
+//        LinearLayout linear = (LinearLayout) rootView.findViewById(R.id.trailers_linear_layout);
+//
+//        for(int i = 0 ; i < dummy.size() ; i++){
+//            movieTrailerRow = LayoutInflater.from(getActivity()).inflate(R.layout.trailers_item, null);
+//            TextView text = (TextView) movieTrailerRow.findViewById(R.id.trailers_item_id);
+//            text.setText(dummy.get(i));
+//            text.setOnClickListener(new View.OnClickListener() {
+//                @Override
+//                public void onClick(View view) {
+//                    Toast.makeText(getActivity(),"hey",Toast.LENGTH_LONG).show();
+//                }
+//            });
+//            linear.addView(text);
+//        }
+//
+//
+//
+//    }
 
 }

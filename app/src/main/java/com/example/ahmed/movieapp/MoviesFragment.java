@@ -39,7 +39,7 @@ public class MoviesFragment extends Fragment {
     @Override
     public void onStart() {
         super.onStart();
-
+        displayGrid();
     }
 
     /**
@@ -95,26 +95,25 @@ public class MoviesFragment extends Fragment {
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
         outState.putParcelableArrayList("moviesArrayList",movies);
-
     }
 
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
         rootView = inflater.inflate(R.layout.fragment_movies, container, false);
-
         if(savedInstanceState == null || ! savedInstanceState.containsKey("moviesArrayList")){
             /**
              * while testing the app , the app used to crash when there is
              * no available network , so a network check runs first before
              * running the AsyncTask to get the data from the server
              */
-            if(checkNetwork()) {
-                displayGrid();
-            }
-            else{
-                Toast.makeText(getActivity(),"there is no network connection",Toast.LENGTH_SHORT).show();
-            }
+        if(checkNetwork()) {
+            displayGrid();
+        }
+        else{
+            Toast.makeText(getActivity(),"there is no network connection",Toast.LENGTH_SHORT).show();
+        }
+
         }else {
             movies = savedInstanceState.getParcelableArrayList("moviesArrayList");
             createComponents();

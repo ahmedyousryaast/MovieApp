@@ -10,6 +10,9 @@ import android.view.View;
 import android.view.ViewGroup;
 import android.widget.ArrayAdapter;
 import android.widget.ImageView;
+import android.widget.ProgressBar;
+import android.widget.TextView;
+
 import com.squareup.picasso.Picasso;
 import java.util.List;
 
@@ -18,7 +21,6 @@ import java.util.List;
  * returned from the server into the main grid
  */
 public class MovieAdapter extends ArrayAdapter<Movies> {
-
     /**
      * public constructor that takes the context and the layout file of the ImageView and the id of the image view
      * and an array list of images to work on
@@ -57,7 +59,7 @@ public class MovieAdapter extends ArrayAdapter<Movies> {
         Movies movie = getItem(position);
         //using the uri class the build the url of the poster
         Uri uri = Uri.parse(Base_URL).buildUpon().appendEncodedPath(movie.getPoster()).build();
-        //getting the image using findViewById
+        //creating instance of view holder class
         ImageView imageView =(ImageView) convertView.findViewById(R.id.grid_item_id);
         //using picasso to set the image to the poster
         Picasso.with(getContext()).load(uri.toString()).into(imageView);
