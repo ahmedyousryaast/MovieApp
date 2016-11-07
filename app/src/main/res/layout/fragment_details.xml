@@ -43,14 +43,32 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/overview_details"/>
+        <TextView
+            android:layout_below="@id/backdrop_details"
+            android:id="@+id/trailers_label"
+            android:text="Trailers :"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
         <LinearLayout
-            android:layout_below="@id/backdrop_details"
+            android:layout_below="@id/trailers_label"
             android:id="@+id/trailers_linear_layout"
             android:orientation="vertical"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"/>
 
+        <TextView
+            android:id="@+id/reviews_label"
+            android:layout_below="@id/trailers_linear_layout"
+            android:text="Reviews :"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
+        <LinearLayout
+            android:layout_below="@id/reviews_label"
+            android:id="@+id/reviews_linear_layout"
+            android:orientation="vertical"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"/>
 
     </RelativeLayout>
 </ScrollView>

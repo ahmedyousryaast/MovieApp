@@ -37,6 +37,9 @@ public class DetailsFragment extends Fragment {
     //this arraylist holds the list of trailers
     ArrayList<Trailer> trailers;
 
+    //this arraylist holds the list of reviews
+    ArrayList<Review> reviews;
+
     //this movie object holds the movie returen from the intent
     Movies movie;
 
@@ -57,7 +60,7 @@ public class DetailsFragment extends Fragment {
 
         if(checkNetwork()) {
             try {
-                getTrailersList();
+                getTrailersRivewsList();
             } catch (ExecutionException e) {
                 e.printStackTrace();
             } catch (InterruptedException e) {
@@ -73,9 +76,11 @@ public class DetailsFragment extends Fragment {
         return rootView;
     }
 
-    private void getTrailersList() throws ExecutionException, InterruptedException {
-        TrailersBackgroundTask task = new TrailersBackgroundTask();
-        trailers = task.execute(movie.getId()).get();
+    private void getTrailersRivewsList() throws ExecutionException, InterruptedException {
+        TrailersBackgroundTask task1 = new TrailersBackgroundTask();
+        trailers = task1.execute(movie.getId()).get();
+        ReviewBackgroundTask task2 = new ReviewBackgroundTask();
+        reviews = task2.execute(movie.getId()).get();
     }
 
     private boolean checkNetwork() {
@@ -110,14 +115,23 @@ public class DetailsFragment extends Fragment {
         vote.setText("Average Votes :\n"+movie.getVoteAvg());
         Picasso.with(getActivity()).load(posterURL).into(poster);
         Picasso.with(getActivity()).load(backdropURL).into(backdrop);
-
         displayTrailersList();
-//        createTrailersListDummy();
+        displayRivewsList();
 
     }
 
+    private void displayRivewsList() {
+        View movieReviewRow;
+        LinearLayout linear = (LinearLayout) rootView.findViewById(R.id.reviews_linear_layout);
+        for(int i = 0 ; i < reviews.size();i++){
+            movieReviewRow = LayoutInflater.from(getActivity()).inflate(R.layout.review_item,null);
+            TextView text = (TextView) movieReviewRow.findViewById(R.id.review_item_id);
+            text.setText(reviews.get(i).getContent());
+            linear.addView(text);
+        }
+    }
+
     private void displayTrailersList() {
-        final ArrayList<Trailer> temp = trailers;
         View movieTrailerRow;
         LinearLayout linear = (LinearLayout) rootView.findViewById(R.id.trailers_linear_layout);
         for(int i = 0 ; i < trailers.size();i++){
@@ -142,33 +156,5 @@ public class DetailsFragment extends Fragment {
         }
 
     }
-
-
-//    private void createTrailersListDummy() {
-//        //dummy data
-//        ArrayList<String>dummy = new ArrayList<String>();
-//        dummy.add("trailer 1");
-//        dummy.add("trailer 2");
-//        dummy.add("trailer 3");
-//        View movieTrailerRow;
-//
-//        LinearLayout linear = (LinearLayout) rootView.findViewById(R.id.trailers_linear_layout);
-//
-//        for(int i = 0 ; i < dummy.size() ; i++){
-//            movieTrailerRow = LayoutInflater.from(getActivity()).inflate(R.layout.trailers_item, null);
-//            TextView text = (TextView) movieTrailerRow.findViewById(R.id.trailers_item_id);
-//            text.setText(dummy.get(i));
-//            text.setOnClickListener(new View.OnClickListener() {
-//                @Override
-//                public void onClick(View view) {
-//                    Toast.makeText(getActivity(),"hey",Toast.LENGTH_LONG).show();
-//                }
-//            });
-//            linear.addView(text);
-//        }
-//
-//
-//
-//    }
 
 }
