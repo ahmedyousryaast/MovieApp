@@ -11,7 +11,6 @@ public class DetailsActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
-//        getActionBar().setDisplayHomeAsUpEnabled(true);
         if (savedInstanceState == null) {
             getSupportFragmentManager().beginTransaction()
                     .add(R.id.details_activity_frame, new DetailsFragment())

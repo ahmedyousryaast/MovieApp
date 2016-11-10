@@ -34,19 +34,27 @@ public class DetailsFragment extends Fragment {
      */
     View rootView;
 
-    //this arraylist holds the list of trailers
+    //this ArrayList holds the list of trailers
     ArrayList<Trailer> trailers;
 
-    //this arraylist holds the list of reviews
+    //this ArrayList holds the list of reviews
     ArrayList<Review> reviews;
 
-    //this movie object holds the movie returen from the intent
+    //this movie object holds the movie returns from the intent
     Movies movie;
 
     final String BASE_URL = "https://www.youtube.com/watch";
     final String Query_param_v ="v";
 
     public DetailsFragment() {
+    }
+
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        outState.putParcelable("movieObject",movie);
+        outState.putParcelableArrayList("trailersArrayList",trailers);
+        outState.putParcelableArrayList("reviewsArrayList",reviews);
     }
 
     @Override
@@ -57,7 +65,7 @@ public class DetailsFragment extends Fragment {
         //retrieving the object from the intent
         movie = (Movies) getActivity().getIntent().getParcelableExtra("movie");
 
-
+        if(savedInstanceState == null || ! savedInstanceState.containsKey("moviesArrayList")){
         if(checkNetwork()) {
             try {
                 getTrailersRivewsList();
@@ -71,6 +79,12 @@ public class DetailsFragment extends Fragment {
         }
         else{
             Toast.makeText(getActivity(),"there is no network connection",Toast.LENGTH_SHORT).show();
+        }
+        }else {
+            movie = savedInstanceState.getParcelable("movieObject");
+            trailers = savedInstanceState.getParcelableArrayList("trailersArrayList");
+            reviews = savedInstanceState.getParcelableArrayList("reviewsArrayList");
+            styling();
         }
 
         return rootView;

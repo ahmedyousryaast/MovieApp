@@ -46,6 +46,12 @@ public class Movies implements Parcelable{
         mId = in.readString();
     }
 
+    /**
+     *  this function takes in a parcel as parameter
+     *  and writes the content of the object into that parcel
+     * @param dest
+     * @param flags
+     */
     @Override
     public void writeToParcel(Parcel dest, int flags) {
         dest.writeString(mPoster);
@@ -61,8 +67,9 @@ public class Movies implements Parcelable{
     public int describeContents() {
         return 0;
     }
-
+    //interface that must be implemented , source : https://developer.android.com/reference/android/os/Parcelable.Creator.html
     public static final Creator<Movies> CREATOR = new Creator<Movies>() {
+        //create a parcel and create object from it
         @Override
         public Movies createFromParcel(Parcel in) {
             return new Movies(in);
