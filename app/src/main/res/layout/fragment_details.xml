@@ -27,17 +27,25 @@
             android:layout_height="wrap_content"
             android:layout_below="@id/title_details"
             android:layout_toRightOf="@id/poster_details"/>
-        <TextView
-            android:id="@+id/overview_details"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_below="@id/poster_details"/>
+
         <TextView
             android:id="@+id/votes_details"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_below="@id/release_date_details"
             android:layout_toRightOf="@id/poster_details"/>
+        <Button
+            android:id="@+id/fav_button"
+            android:text="favorite"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/votes_details"
+            android:layout_toRightOf="@id/poster_details"/>
+        <TextView
+            android:id="@+id/overview_details"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_below="@id/poster_details"/>
         <ImageView
             android:id="@+id/backdrop_details"
             android:layout_width="wrap_content"
