@@ -11,17 +11,18 @@ import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
 import android.view.ViewGroup;
+import android.widget.Button;
 import android.widget.ImageView;
 import android.widget.LinearLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import com.example.ahmed.movieapp.data.ContainerClass;
+import com.example.ahmed.movieapp.data.DatabaseBackgroundTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
-
-
 /**
  * A simple {@link Fragment} subclass.
  */
@@ -131,6 +132,28 @@ public class DetailsFragment extends Fragment {
         Picasso.with(getActivity()).load(backdropURL).into(backdrop);
         displayTrailersList();
         displayRivewsList();
+
+        final ContainerClass containerClass = new ContainerClass(movie,trailers,reviews);
+
+        final Button btn = (Button) rootView.findViewById(R.id.fav_button);
+        btn.setOnClickListener(new View.OnClickListener() {
+            @Override
+            public void onClick(View view) {
+                DatabaseBackgroundTask task = new DatabaseBackgroundTask(getActivity());
+                try {
+                    if(task.execute(containerClass).get()){
+                        Toast.makeText(getActivity(),"added to favorites",Toast.LENGTH_LONG).show();
+                    }
+                    else{
+                        Toast.makeText(getActivity(),"removed from favorites",Toast.LENGTH_LONG).show();
+                    }
+                } catch (InterruptedException e) {
+                    e.printStackTrace();
+                } catch (ExecutionException e) {
+                    e.printStackTrace();
+                }
+            }
+        });
 
     }
 

@@ -14,6 +14,7 @@ import com.example.ahmed.movieapp.data.MyContractClass.MovieWithReview;
  * this is my DB helper class
  */
 public class MovieDbHelper extends SQLiteOpenHelper {
+
     //data base version
     private static final int DATABASE_VERSION = 1;
     //the database file name
