@@ -14,13 +14,20 @@ import com.example.ahmed.movieapp.data.MyContractClass.MovieWithReview;
  * this is my DB helper class
  */
 public class MovieDbHelper extends SQLiteOpenHelper {
-
+    private static MovieDbHelper mHelper = null;
     //data base version
     private static final int DATABASE_VERSION = 1;
     //the database file name
     static final String DATABASE_NAME = "movies.db";
 
-    public MovieDbHelper(Context context) {
+    public static MovieDbHelper getInstance(Context context) {
+        if (mHelper == null) {
+            mHelper = new MovieDbHelper(context.getApplicationContext());
+        }
+        return mHelper;
+    }
+
+    private MovieDbHelper(Context context) {
         super(context, DATABASE_NAME, null, DATABASE_VERSION);
     }
 

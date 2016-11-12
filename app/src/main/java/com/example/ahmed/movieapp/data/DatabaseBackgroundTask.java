@@ -32,7 +32,7 @@ public class DatabaseBackgroundTask extends AsyncTask<ContainerClass,Void,Boolea
         //that will have the same values but just to make the code readable
         ContainerClass container = containerClasses[0];
         //new helper object
-        MovieDbHelper helper = new MovieDbHelper(mContext);
+        MovieDbHelper helper = MovieDbHelper.getInstance(mContext);
         db= helper.getWritableDatabase();
 
         //check if the movie was already marked as favourite
