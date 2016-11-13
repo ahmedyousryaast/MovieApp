@@ -18,6 +18,8 @@ import android.widget.AdapterView;
 import android.widget.GridView;
 import android.widget.Toast;
 
+import com.example.ahmed.movieapp.data.GetMovieBackgroundTask;
+
 import java.util.ArrayList;
 import java.util.concurrent.ExecutionException;
 
@@ -40,6 +42,7 @@ public class MoviesFragment extends Fragment {
     public void onStart() {
         super.onStart();
         displayGrid();
+        Log.d("onStart"," i am here");
     }
 
     /**
@@ -47,17 +50,41 @@ public class MoviesFragment extends Fragment {
      *
      */
     private void displayGrid() {
-        MoviesBackgroundTask task = new MoviesBackgroundTask();
+
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortMethod = sharedPreferences.getString(getString(R.string.sort_key),getString(R.string.sort_pop));
-        try {
-            movies = task.execute(sortMethod).get();
-            createComponents();
-        } catch (InterruptedException e) {
-            e.printStackTrace();
-        } catch (ExecutionException e) {
-            e.printStackTrace();
+        Log.d("testing ",sortMethod);
+        if(sortMethod.equals("fav")){
+            GetMovieBackgroundTask task = new GetMovieBackgroundTask(getActivity());
+            try {
+                movies = task.execute().get();
+                if(movies == null){
+                    Toast.makeText(getActivity(),"Your Favorites are empty",Toast.LENGTH_LONG).show();
+                    GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_id);
+                    MovieAdapter adapter = (MovieAdapter) gridView.getAdapter();
+                    adapter.clear();
+
+                }else{
+                    createComponents();
+                }
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
         }
+        else{
+            try {
+                MoviesBackgroundTask task = new MoviesBackgroundTask();
+                movies = task.execute(sortMethod).get();
+                createComponents();
+            } catch (InterruptedException e) {
+                e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
+            }
+        }
+
     }
 
     private void showDetails(int position) {
@@ -82,6 +109,7 @@ public class MoviesFragment extends Fragment {
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setHasOptionsMenu(true);
+        Log.d("onCreate"," i am here");
     }
 
     /**
@@ -100,7 +128,9 @@ public class MoviesFragment extends Fragment {
     @Override
     public View onCreateView(LayoutInflater inflater, ViewGroup container,
                              Bundle savedInstanceState) {
+        Log.d("onCreateView","here");
         rootView = inflater.inflate(R.layout.fragment_movies, container, false);
+
         if(savedInstanceState == null || ! savedInstanceState.containsKey("moviesArrayList")){
             /**
              * while testing the app , the app used to crash when there is

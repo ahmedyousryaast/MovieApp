@@ -26,7 +26,7 @@ public class Movies implements Parcelable{
      * @param mVoteAvg holds the average vote rate
      * @param mId holds the id of the movie
      */
-    Movies(String mPoster, String mDate, String mTitle, String mOverview , String mBackdrop , String mVoteAvg , String mId){
+    public Movies(String mPoster, String mDate, String mTitle, String mOverview , String mBackdrop , String mVoteAvg , String mId){
         this.mPoster = mPoster;
         this.mDate = mDate;
         this.mTitle = mTitle;

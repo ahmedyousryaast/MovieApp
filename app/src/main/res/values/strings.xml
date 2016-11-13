@@ -5,10 +5,12 @@
     <string-array name="pref_example_list_titles">
         <item>Top Rated</item>
         <item>Most Popular</item>
+        <item>Favorites</item>
     </string-array>
     <string-array name="pref_example_list_values">
         <item>popular</item>
         <item>top_rated</item>
+        <item>fav</item>>
     </string-array>
     <string name="sort_key">sort_key</string>
     <string name="sort_pop">popular</string>
