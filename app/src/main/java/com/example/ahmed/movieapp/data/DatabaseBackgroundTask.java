@@ -112,18 +112,16 @@ public class DatabaseBackgroundTask extends AsyncTask<ContainerClass,Void,Boolea
         Log.d("my testing passed "," the id of the movie is "+movieId);
         ArrayList<Long>trailersIndexes = getTrailersID(containerClass);
 
-        for(int i = 0 ; i < trailersIndexes.size();i++){
-            Log.d("test passed : ","id of the trailer is : "+trailersIndexes.get(i));
-        }
         ArrayList<Long>reviewsIndexes = getReviewsID(containerClass);
-        for(int i = 0 ; i < reviewsIndexes.size();i++){
-            Log.d("test passed : ","id of the reviews is : "+reviewsIndexes.get(i));
-        }
 
-        removeMovieWithTrailer(movieId);
-        removeMovieWithReviews(movieId);
-        removeReviews(reviewsIndexes);
-        removeTrailers(trailersIndexes);
+        if(reviewsIndexes!=null){
+            removeMovieWithReviews(movieId);
+            removeReviews(reviewsIndexes);
+        }
+        if(trailersIndexes != null){
+            removeMovieWithTrailer(movieId);
+            removeTrailers(trailersIndexes);
+        }
         removeMovie(movieId);
 
 //        Cursor myC = db.query(
@@ -176,31 +174,38 @@ public class DatabaseBackgroundTask extends AsyncTask<ContainerClass,Void,Boolea
     private ArrayList<Long> getReviewsID(ContainerClass containerClass) {
         ArrayList<Long> results = new ArrayList<Long>();
         String selection = "";
-        for(int i = 0 ; i < containerClass.getReviews().size()-1;i++){
-            selection+=ReviewEntry.COLUMN_AUTHOR + " = ? OR ";
+
+        if(containerClass.getReviews().size() == 0) {
+            return null;
         }
-        selection+=ReviewEntry.COLUMN_AUTHOR + " = ?";
+        else {
+            for (int i = 0; i < containerClass.getReviews().size() - 1; i++) {
+                selection += ReviewEntry.COLUMN_AUTHOR + " = ? OR ";
+            }
+            selection += ReviewEntry.COLUMN_AUTHOR + " = ?";
 
 
-        String [] selectionArgs = new String[containerClass.getReviews().size()];
-        for(int i = 0 ; i < selectionArgs.length ;i++){
-            selectionArgs[i] = containerClass.getReviews().get(i).getAuthor();
+            String[] selectionArgs = new String[containerClass.getReviews().size()];
+            for (int i = 0; i < selectionArgs.length; i++) {
+                selectionArgs[i] = containerClass.getReviews().get(i).getAuthor();
+            }
+            String[] projection = {ReviewEntry._ID};
+            Cursor c = db.query(
+                    ReviewEntry.TABLE_NAME,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    null
+            );
+            c.moveToFirst();
+            do {
+                results.add(c.getLong(c.getColumnIndexOrThrow(ReviewEntry._ID)));
+            } while (c.moveToNext());
+            return results;
+
         }
-        String[] projection = {ReviewEntry._ID};
-        Cursor c = db.query(
-                ReviewEntry.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-        );
-        c.moveToFirst();
-        do{
-            results.add(c.getLong( c.getColumnIndexOrThrow(ReviewEntry._ID)));
-        }while (c.moveToNext());
-        return results;
     }
 
     /**
@@ -211,38 +216,40 @@ public class DatabaseBackgroundTask extends AsyncTask<ContainerClass,Void,Boolea
     private ArrayList<Long> getTrailersID(ContainerClass containerClass) {
         ArrayList<Long> results = new ArrayList<Long>();
         String selection = "";
-
-        for(int i = 0 ; i < containerClass.getTrailers().size()-1;i++){
-            selection+=TrailerEntry.COLUMN_KEY + " = ? OR ";
+        if(containerClass.getTrailers().size() == 0) {
+            return null;
         }
-        selection+=TrailerEntry.COLUMN_KEY + " = ?";
-        Log.d("iterator test ",selection);
+        else {
+            for (int i = 0; i < containerClass.getTrailers().size() - 1; i++) {
+                selection += TrailerEntry.COLUMN_KEY + " = ? OR ";
+            }
+            selection += TrailerEntry.COLUMN_KEY + " = ?";
+            Log.d("iterator test ", selection);
 
 //        String selection = TrailerEntry.COLUMN_KEY + " = ?";
 
-        String [] selectionArgs = new String[containerClass.getTrailers().size()];
-        Log.d("here0","here0");
-        for(int i = 0 ; i < selectionArgs.length ;i++){
-            selectionArgs[i] = containerClass.getTrailers().get(i).getKey();
-            Log.d("selection arg is ", selectionArgs[i]);
+            String[] selectionArgs = new String[containerClass.getTrailers().size()];
+            Log.d("here0", "here0");
+            for (int i = 0; i < selectionArgs.length; i++) {
+                selectionArgs[i] = containerClass.getTrailers().get(i).getKey();
+                Log.d("selection arg is ", selectionArgs[i]);
+            }
+            String[] projection = {TrailerEntry._ID};
+            Cursor c = db.query(
+                    TrailerEntry.TABLE_NAME,
+                    projection,
+                    selection,
+                    selectionArgs,
+                    null,
+                    null,
+                    null
+            );
+            c.moveToFirst();
+            do {
+                results.add(c.getLong(c.getColumnIndexOrThrow(TrailerEntry._ID)));
+            } while (c.moveToNext());
+            return results;
         }
-        String[] projection = {TrailerEntry._ID};
-        Cursor c = db.query(
-                TrailerEntry.TABLE_NAME,
-                projection,
-                selection,
-                selectionArgs,
-                null,
-                null,
-                null
-        );
-        Log.d("here ","here");
-        c.moveToFirst();
-
-        do{
-            results.add(c.getLong( c.getColumnIndexOrThrow(TrailerEntry._ID)));
-        }while (c.moveToNext());
-        return results;
     }
 
     /**

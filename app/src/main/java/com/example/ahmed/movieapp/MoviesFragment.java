@@ -43,6 +43,7 @@ public class MoviesFragment extends Fragment {
         super.onStart();
         displayGrid();
         Log.d("onStart"," i am here");
+
     }
 
     /**
@@ -50,7 +51,7 @@ public class MoviesFragment extends Fragment {
      *
      */
     private void displayGrid() {
-
+        Log.d("test ","ondisplaygrid");
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortMethod = sharedPreferences.getString(getString(R.string.sort_key),getString(R.string.sort_pop));
         Log.d("testing ",sortMethod);
@@ -62,8 +63,9 @@ public class MoviesFragment extends Fragment {
                     Toast.makeText(getActivity(),"Your Favorites are empty",Toast.LENGTH_LONG).show();
                     GridView gridView = (GridView) rootView.findViewById(R.id.grid_view_id);
                     MovieAdapter adapter = (MovieAdapter) gridView.getAdapter();
-                    adapter.clear();
-
+                    if(adapter != null){
+                        adapter.clear();
+                    }
                 }else{
                     createComponents();
                 }
@@ -122,7 +124,9 @@ public class MoviesFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
-        outState.putParcelableArrayList("moviesArrayList",movies);
+        if(movies != null){
+            outState.putParcelableArrayList("moviesArrayList", movies);
+        }
     }
 
     @Override
@@ -164,5 +168,15 @@ public class MoviesFragment extends Fragment {
         });
     }
 
+    @Override
+    public void onPause() {
+        super.onPause();
+        Log.d("OnPause ", "called");
+    }
 
+    @Override
+    public void onStop() {
+        super.onStop();
+        Log.d("onStop ","called");
+    }
 }
