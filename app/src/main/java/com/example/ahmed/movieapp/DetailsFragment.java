@@ -139,9 +139,7 @@ public class DetailsFragment extends Fragment {
         Button btn = (Button) rootView.findViewById(R.id.fav_button);
         btn.setVisibility(btn.GONE);
         TextView text1 = (TextView) rootView.findViewById(R.id.reviews_label);
-        TextView text2 = (TextView) rootView.findViewById(R.id.trailers_label);
         text1.setVisibility(text1.GONE);
-        text2.setVisibility(text2.GONE);
     }
 
     private void addMovieToview() {
@@ -162,11 +160,11 @@ public class DetailsFragment extends Fragment {
         TextView date = (TextView) rootView.findViewById(R.id.release_date_details);
         TextView vote = (TextView)rootView.findViewById(R.id.votes_details);
         //updating the views
-        String movieTitle = "Title :"+movie.getTitle();
+        String movieTitle = movie.getTitle();
         title.setText(movieTitle);
         overview.setText("Overview :\n"+movie.getOverview());
         date.setText("Release Date :\n"+movie.getDate());
-        vote.setText("Average Votes :\n"+movie.getVoteAvg());
+        vote.setText("Average Votes :\n"+movie.getVoteAvg()+"/10");
         Picasso.with(getActivity()).load(posterURL).into(poster);
         Picasso.with(getActivity()).load(backdropURL).into(backdrop);
     }
