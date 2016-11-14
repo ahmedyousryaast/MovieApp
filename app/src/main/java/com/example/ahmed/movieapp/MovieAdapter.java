@@ -43,12 +43,18 @@ public class MovieAdapter extends ArrayAdapter<Movies> {
      */
     @Override
     public View getView(int position, View convertView, ViewGroup parent) {
+        ViewHolder viewHolder = null;
         /**
          * checks if the view that the adapter got is null which means that
          * this view hasn't been inflated yet so it will be inflated first
          */
         if (convertView == null) {
+            viewHolder = new ViewHolder();
             convertView = LayoutInflater.from(getContext()).inflate(R.layout.grid_item_poster, parent, false);
+            convertView.setTag(viewHolder);
+        }
+        else{
+            viewHolder=(ViewHolder)convertView.getTag();
         }
         /**
          * this is the base url that we will use and append to it the Poster
@@ -60,9 +66,12 @@ public class MovieAdapter extends ArrayAdapter<Movies> {
         //using the uri class the build the url of the poster
         Uri uri = Uri.parse(Base_URL).buildUpon().appendEncodedPath(movie.getPoster()).build();
         //creating instance of view holder class
-        ImageView imageView =(ImageView) convertView.findViewById(R.id.grid_item_id);
+        viewHolder.image =(ImageView) convertView.findViewById(R.id.grid_item_id);
         //using picasso to set the image to the poster
-        Picasso.with(getContext()).load(uri.toString()).into(imageView);
+        Picasso.with(getContext()).load(uri.toString()).into(viewHolder.image);
         return convertView;
+    }
+    static class ViewHolder {
+        ImageView image;
     }
 }
