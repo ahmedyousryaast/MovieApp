@@ -54,7 +54,6 @@ public class MoviesFragment extends Fragment {
         Log.d("test ","ondisplaygrid");
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortMethod = sharedPreferences.getString(getString(R.string.sort_key),getString(R.string.sort_pop));
-        Log.d("testing ",sortMethod);
         if(sortMethod.equals("fav")){
             GetMovieBackgroundTask task = new GetMovieBackgroundTask(getActivity());
             try {
@@ -77,9 +76,14 @@ public class MoviesFragment extends Fragment {
         }
         else{
             try {
-                MoviesBackgroundTask task = new MoviesBackgroundTask();
-                movies = task.execute(sortMethod).get();
-                createComponents();
+                if(checkNetwork()) {
+                    MoviesBackgroundTask task = new MoviesBackgroundTask();
+                    movies = task.execute(sortMethod).get();
+                    createComponents();
+                }
+                else {
+                    Toast.makeText(getActivity(),"there is no network connection",Toast.LENGTH_SHORT).show();
+                }
             } catch (InterruptedException e) {
                 e.printStackTrace();
             } catch (ExecutionException e) {
@@ -124,6 +128,7 @@ public class MoviesFragment extends Fragment {
     @Override
     public void onSaveInstanceState(Bundle outState) {
         super.onSaveInstanceState(outState);
+        Log.d("OnSaveInstance called"," check");
         if(movies != null){
             outState.putParcelableArrayList("moviesArrayList", movies);
         }
@@ -157,6 +162,7 @@ public class MoviesFragment extends Fragment {
     }
 
     private void createComponents() {
+        Log.d("createCoponentsCalled"," check");
         MovieAdapter adapter = new MovieAdapter(getActivity(),R.layout.grid_item_poster,R.id.grid_item_id,movies);
         GridView grid = (GridView) rootView.findViewById(R.id.grid_view_id);
         grid.setAdapter(adapter);

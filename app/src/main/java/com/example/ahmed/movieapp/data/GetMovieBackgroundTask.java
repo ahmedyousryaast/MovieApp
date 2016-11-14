@@ -10,7 +10,6 @@ import com.example.ahmed.movieapp.Movies;
 
 import java.util.ArrayList;
 import com.example.ahmed.movieapp.data.MyContractClass.MovieEntry;
-import com.example.ahmed.movieapp.Movies;
 
 /**
  * Created by Ahmed on 11/12/2016.
@@ -36,7 +35,7 @@ public class GetMovieBackgroundTask extends AsyncTask<Void,Void,ArrayList<Movies
                 , null
         );
 
-
+        //in cass no movies are favorited yet
         if (!(c.moveToFirst()) || c.getCount() == 0) {
             c.close();
             Log.d("test passed", "working perfectly fine");

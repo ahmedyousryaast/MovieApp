@@ -52,7 +52,9 @@ public class DatabaseBackgroundTask extends AsyncTask<ContainerClass,Void,Boolea
             for (int i = 0; i < trailersIndexes.size(); i++) {
                 ContentValues contentValues = new ContentValues();
                 contentValues.put(MovieWithTrailer.MOVIE_ID, newRowId);
+                Log.d("mov with t",newRowId+"");
                 contentValues.put(MovieWithTrailer.TRAILER_ID, trailersIndexes.get(i));
+                Log.d("mov with t",trailersIndexes.get(i)+"");
                 db.insert(MovieWithTrailer.TABLE_NAME, null, contentValues);
             }
 
@@ -86,6 +88,7 @@ public class DatabaseBackgroundTask extends AsyncTask<ContainerClass,Void,Boolea
         for (int i = 0; i < container.getTrailers().size(); i++) {
             ContentValues contentValues = new ContentValues();
             contentValues.put(TrailerEntry.COLUMN_KEY, container.getTrailers().get(i).getKey());
+            Log.d("db key" ,container.getTrailers().get(i).getKey());
             contentValues.put(TrailerEntry.COLUMN_NAME, container.getTrailers().get(i).getName());
             contentValues.put(TrailerEntry.COLUMN_SITE, container.getTrailers().get(i).getSite());
             trailersIndexes.add(db.insert(TrailerEntry.TABLE_NAME, null, contentValues));
@@ -96,6 +99,7 @@ public class DatabaseBackgroundTask extends AsyncTask<ContainerClass,Void,Boolea
     private long insertMovieIntoDataBase(ContainerClass container) {
         ContentValues cv = new ContentValues();
         cv.put(MovieEntry.COLUMN_MOVIE_ID, container.getMovie().getId());
+        Log.d("movie id is ", container.getMovie().getId());
         cv.put(MovieEntry.COLUMN_POSTER, container.getMovie().getPoster());
         cv.put(MovieEntry.COLUMN_TITLE, container.getMovie().getTitle());
         cv.put(MovieEntry.COLUMN_DATE, container.getMovie().getDate());
@@ -224,9 +228,6 @@ public class DatabaseBackgroundTask extends AsyncTask<ContainerClass,Void,Boolea
                 selection += TrailerEntry.COLUMN_KEY + " = ? OR ";
             }
             selection += TrailerEntry.COLUMN_KEY + " = ?";
-            Log.d("iterator test ", selection);
-
-//        String selection = TrailerEntry.COLUMN_KEY + " = ?";
 
             String[] selectionArgs = new String[containerClass.getTrailers().size()];
             Log.d("here0", "here0");

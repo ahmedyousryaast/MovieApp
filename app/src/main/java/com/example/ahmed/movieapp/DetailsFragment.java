@@ -2,10 +2,12 @@ package com.example.ahmed.movieapp;
 
 
 import android.content.Intent;
+import android.content.SharedPreferences;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
 import android.os.Bundle;
+import android.preference.PreferenceManager;
 import android.support.v4.app.Fragment;
 import android.util.Log;
 import android.view.LayoutInflater;
@@ -19,6 +21,8 @@ import android.widget.Toast;
 
 import com.example.ahmed.movieapp.data.ContainerClass;
 import com.example.ahmed.movieapp.data.DatabaseBackgroundTask;
+import com.example.ahmed.movieapp.data.GetReviewDB;
+import com.example.ahmed.movieapp.data.GetTrailersBackgroundTask;
 import com.squareup.picasso.Picasso;
 
 import java.util.ArrayList;
@@ -65,47 +69,82 @@ public class DetailsFragment extends Fragment {
         rootView = inflater.inflate(R.layout.fragment_details, container, false);
         //retrieving the object from the intent
         movie = (Movies) getActivity().getIntent().getParcelableExtra("movie");
-
-        if(savedInstanceState == null || ! savedInstanceState.containsKey("moviesArrayList")){
-        if(checkNetwork()) {
+        SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
+        String sortMethod = sharedPreferences.getString(getString(R.string.sort_key),getString(R.string.sort_pop));
+        if(sortMethod.equals("fav")){
+            GetTrailersBackgroundTask trailersTask = new GetTrailersBackgroundTask(getActivity());
+            GetReviewDB getReviewDB = new GetReviewDB(getActivity());
             try {
-                getTrailersRivewsList();
-            } catch (ExecutionException e) {
-                e.printStackTrace();
+                Log.d("test","i will add movie");
+                addMovieToview();
+                Log.d("test","movie added");
+                ArrayList<Trailer> trailersList = trailersTask.execute(movie.getId()).get();
+                if(trailersList!= null){
+                    trailers = trailersList;
+                    displayTrailersList();
+                }
+                ArrayList<Review> reviewsList = getReviewDB.execute(movie.getId()).get();
+                if(reviewsList!= null){
+                    reviews = reviewsList;
+                    displayRivewsList();
+                }
+                if(checkNetwork()){
+                    favButtonBehavior();
+                }
+                else{
+                    Button btn = (Button) rootView.findViewById(R.id.fav_button);
+                    btn.setVisibility(btn.GONE);
+                }
+
             } catch (InterruptedException e) {
                 e.printStackTrace();
+            } catch (ExecutionException e) {
+                e.printStackTrace();
             }
-            //retrieving the views from the layout and add the details from the object to it
-            styling();
         }
-        else{
-            Toast.makeText(getActivity(),"there is no network connection",Toast.LENGTH_SHORT).show();
+        else {
+            if (savedInstanceState == null) {
+                if (checkNetwork()) {
+                    try {
+                        getTrailersRivewsList();
+                    } catch (ExecutionException e) {
+                        e.printStackTrace();
+                    } catch (InterruptedException e) {
+                        e.printStackTrace();
+                    }
+                    //retrieving the views from the layout and add the details from the object to it
+                    addMovieToview();
+                    displayTrailersList();
+                    displayRivewsList();
+                    favButtonBehavior();
+                } else {
+                    Toast.makeText(getActivity(), "there is no network connection", Toast.LENGTH_SHORT).show();
+                    addMovieToview();
+                    removeWidgets();
+                }
+            } else {
+                movie = savedInstanceState.getParcelable("movieObject");
+                trailers = savedInstanceState.getParcelableArrayList("trailersArrayList");
+                reviews = savedInstanceState.getParcelableArrayList("reviewsArrayList");
+                addMovieToview();
+                displayTrailersList();
+                displayRivewsList();
+                favButtonBehavior();
+            }
         }
-        }else {
-            movie = savedInstanceState.getParcelable("movieObject");
-            trailers = savedInstanceState.getParcelableArrayList("trailersArrayList");
-            reviews = savedInstanceState.getParcelableArrayList("reviewsArrayList");
-            styling();
-        }
-
         return rootView;
     }
 
-    private void getTrailersRivewsList() throws ExecutionException, InterruptedException {
-        TrailersBackgroundTask task1 = new TrailersBackgroundTask();
-        trailers = task1.execute(movie.getId()).get();
-        ReviewBackgroundTask task2 = new ReviewBackgroundTask();
-        reviews = task2.execute(movie.getId()).get();
+    private void removeWidgets() {
+        Button btn = (Button) rootView.findViewById(R.id.fav_button);
+        btn.setVisibility(btn.GONE);
+        TextView text1 = (TextView) rootView.findViewById(R.id.reviews_label);
+        TextView text2 = (TextView) rootView.findViewById(R.id.trailers_label);
+        text1.setVisibility(text1.GONE);
+        text2.setVisibility(text2.GONE);
     }
 
-    private boolean checkNetwork() {
-        ConnectivityManager manager = (ConnectivityManager)getActivity().getSystemService(getActivity().getApplicationContext().CONNECTIVITY_SERVICE);
-        NetworkInfo networkinfo = manager.getActiveNetworkInfo();
-        return networkinfo != null && networkinfo.isConnected();
-    }
-
-    private void styling() {
-
+    private void addMovieToview() {
         //base url to use when creating a uri object to get the images urls
         String Base_URL = "http://image.tmdb.org/t/p/w185";
         //uri that holds the poster url
@@ -130,8 +169,23 @@ public class DetailsFragment extends Fragment {
         vote.setText("Average Votes :\n"+movie.getVoteAvg());
         Picasso.with(getActivity()).load(posterURL).into(poster);
         Picasso.with(getActivity()).load(backdropURL).into(backdrop);
-        displayTrailersList();
-        displayRivewsList();
+    }
+
+    private void getTrailersRivewsList() throws ExecutionException, InterruptedException {
+        TrailersBackgroundTask task1 = new TrailersBackgroundTask();
+        trailers = task1.execute(movie.getId()).get();
+        ReviewBackgroundTask task2 = new ReviewBackgroundTask();
+        reviews = task2.execute(movie.getId()).get();
+    }
+
+    private boolean checkNetwork() {
+        ConnectivityManager manager = (ConnectivityManager)getActivity().getSystemService(getActivity().getApplicationContext().CONNECTIVITY_SERVICE);
+        NetworkInfo networkinfo = manager.getActiveNetworkInfo();
+        return networkinfo != null && networkinfo.isConnected();
+    }
+
+    private void favButtonBehavior() {
+
 
         final ContainerClass containerClass = new ContainerClass(movie,trailers,reviews);
 
