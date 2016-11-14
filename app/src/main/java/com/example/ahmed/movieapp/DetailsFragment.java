@@ -226,14 +226,17 @@ public class DetailsFragment extends Fragment {
         View movieTrailerRow;
         LinearLayout linear = (LinearLayout) rootView.findViewById(R.id.trailers_linear_layout);
         for(int i = 0 ; i < trailers.size();i++){
+
             movieTrailerRow = LayoutInflater.from(getActivity()).inflate(R.layout.trailers_item,null);
+
             TextView text = (TextView) movieTrailerRow.findViewById(R.id.trailers_item_id);
+
             text.setText("Trailer "+(i+1));
+
             final int finalI = i;
-            text.setOnClickListener(new View.OnClickListener() {
+            movieTrailerRow.setOnClickListener(new View.OnClickListener() {
                 @Override
                 public void onClick(View view) {
-
                     //https://developer.android.com/guide/components/intents-common.html#Browser
                     Uri path = Uri.parse(BASE_URL).buildUpon()
                             .appendQueryParameter(Query_param_v,trailers.get(finalI).getKey()).build();
@@ -241,8 +244,10 @@ public class DetailsFragment extends Fragment {
                     if (intent.resolveActivity(getActivity().getPackageManager()) != null) {
                         startActivity(intent);
                     }
+
                 }
             });
+
             linear.addView(movieTrailerRow);
         }
 
