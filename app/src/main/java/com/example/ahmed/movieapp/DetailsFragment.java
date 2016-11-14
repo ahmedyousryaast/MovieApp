@@ -243,7 +243,7 @@ public class DetailsFragment extends Fragment {
                     }
                 }
             });
-            linear.addView(text);
+            linear.addView(movieTrailerRow);
         }
 
     }
