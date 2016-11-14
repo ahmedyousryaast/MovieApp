@@ -214,9 +214,11 @@ public class DetailsFragment extends Fragment {
         LinearLayout linear = (LinearLayout) rootView.findViewById(R.id.reviews_linear_layout);
         for(int i = 0 ; i < reviews.size();i++){
             movieReviewRow = LayoutInflater.from(getActivity()).inflate(R.layout.review_item,null);
+            TextView author = (TextView) movieReviewRow.findViewById(R.id.author_name);
             TextView text = (TextView) movieReviewRow.findViewById(R.id.review_item_id);
+            author.setText(reviews.get(i).getAuthor());
             text.setText(reviews.get(i).getContent());
-            linear.addView(text);
+            linear.addView(movieReviewRow);
         }
     }
 
