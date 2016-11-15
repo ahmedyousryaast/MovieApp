@@ -1,7 +1,9 @@
 package com.example.ahmed.movieapp;
 
+import android.annotation.TargetApi;
 import android.net.Uri;
 import android.os.AsyncTask;
+import android.os.Build;
 import android.util.Log;
 import org.json.JSONArray;
 import org.json.JSONException;
@@ -20,11 +22,10 @@ import java.util.ArrayList;
  * this class's job is to do all the long term operations
  * which are in this case connecting to API and getting the jason file
  */
+@TargetApi(Build.VERSION_CODES.CUPCAKE)
 public class MoviesBackgroundTask extends AsyncTask<String,Void,ArrayList<Movies>> {
     //TAG holds the class name and i use it when i test the app using log statements
     final String TAG = MoviesBackgroundTask.class.getSimpleName();
-    //value to hold my api key
-    String apiKey = "d6ec7096673dfaaeaa506a6cf2902db9";
 
     /**
      * this method takes the json string as input and parse it
@@ -98,7 +99,7 @@ public class MoviesBackgroundTask extends AsyncTask<String,Void,ArrayList<Movies
         //using URI object to build our url
         Uri uri = Uri.parse(BASE_URL).buildUpon()
                 .appendPath(params[0])
-                .appendQueryParameter(QUERY_API_KEY,apiKey)
+                .appendQueryParameter(QUERY_API_KEY,BuildConfig.API_KEY)
                 .build();
         try {
             //extracting the url built and put it in a url object

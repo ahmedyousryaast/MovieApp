@@ -23,8 +23,7 @@ import java.util.ArrayList;
 public class ReviewBackgroundTask extends AsyncTask<String,Void,ArrayList<Review>> {
     //TAG holds the class name and i use it when i test the app using log statements
     final String TAG = MoviesBackgroundTask.class.getSimpleName();
-    //value to hold my api key
-    String apiKey = "d6ec7096673dfaaeaa506a6cf2902db9";
+
 
     public ArrayList<Review> parseJSON(String jsonString) throws JSONException {
         //name of json objects to be extracted from the json string
@@ -67,7 +66,7 @@ public class ReviewBackgroundTask extends AsyncTask<String,Void,ArrayList<Review
         Uri uri = Uri.parse(BASE_URL).buildUpon()
                 .appendPath(strings[0])
                 .appendPath("reviews")
-                .appendQueryParameter(QUERY_API_KEY,apiKey)
+                .appendQueryParameter(QUERY_API_KEY,BuildConfig.API_KEY)
                 .build();
 
         try {
