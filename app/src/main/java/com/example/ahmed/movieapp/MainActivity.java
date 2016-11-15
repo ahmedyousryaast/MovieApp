@@ -9,15 +9,23 @@ import android.view.MenuItem;
 
 public class MainActivity extends AppCompatActivity {
 
+    boolean mTwoPane;
+    private static final String DETAILFRAGMENT_TAG = "DFTAG";
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_main);
-        //Adding the fragment to the activity
-        if (savedInstanceState == null) {
-            getSupportFragmentManager().beginTransaction()
-                    .add(R.id.main_activity_frame, new MoviesFragment())
-                    .commit();
+
+        if(findViewById(R.id.details_activity_frame) != null) {
+            mTwoPane = true;
+            if(savedInstanceState == null) {
+//                getSupportFragmentManager().beginTransaction()
+//                        .replace(R.id.details_activity_frame, new DetailsFragment(),DETAILFRAGMENT_TAG)
+//                        .commit();
+            }
+        } else {
+            mTwoPane = false;
         }
     }
 
