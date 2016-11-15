@@ -3,6 +3,7 @@ package com.example.ahmed.movieapp;
 
 import android.content.Intent;
 import android.content.SharedPreferences;
+import android.graphics.Movie;
 import android.net.ConnectivityManager;
 import android.net.NetworkInfo;
 import android.net.Uri;
@@ -67,8 +68,14 @@ public class DetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_details, container, false);
+
         //retrieving the object from the intent
-        movie = (Movies) getActivity().getIntent().getParcelableExtra("movie");
+        Movies m = (Movies) getActivity().getIntent().getParcelableExtra("movie");
+        if (m == null) {
+            return rootView;
+        }
+
+        movie = m;
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortMethod = sharedPreferences.getString(getString(R.string.sort_key),getString(R.string.sort_pop));
         if(sortMethod.equals("fav")){

@@ -20,9 +20,9 @@ public class MainActivity extends AppCompatActivity {
         if(findViewById(R.id.details_activity_frame) != null) {
             mTwoPane = true;
             if(savedInstanceState == null) {
-//                getSupportFragmentManager().beginTransaction()
-//                        .replace(R.id.details_activity_frame, new DetailsFragment(),DETAILFRAGMENT_TAG)
-//                        .commit();
+                getSupportFragmentManager().beginTransaction()
+                        .replace(R.id.details_activity_frame, new DetailsFragment(),DETAILFRAGMENT_TAG)
+                        .commit();
             }
         } else {
             mTwoPane = false;
