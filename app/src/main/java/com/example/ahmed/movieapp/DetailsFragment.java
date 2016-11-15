@@ -69,13 +69,19 @@ public class DetailsFragment extends Fragment {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_details, container, false);
 
-        //retrieving the object from the intent
-        Movies m = (Movies) getActivity().getIntent().getParcelableExtra("movie");
-        if (m == null) {
-            return rootView;
+        Bundle args = getArguments();
+        if(args == null){
+            return null;
         }
 
-        movie = m;
+        //retrieving the object from the intent
+//        Movies m = (Movies) getActivity().getIntent().getParcelableExtra("movie");
+//        if (m == null) {
+//            Log.d("log" , "m = null");
+//            return null;
+//        }
+
+        movie = args.getParcelable("movie");
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortMethod = sharedPreferences.getString(getString(R.string.sort_key),getString(R.string.sort_pop));
         if(sortMethod.equals("fav")){

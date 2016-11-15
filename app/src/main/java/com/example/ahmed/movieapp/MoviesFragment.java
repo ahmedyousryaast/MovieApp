@@ -38,12 +38,73 @@ public class MoviesFragment extends Fragment {
     public MoviesFragment() {
     }
 
+    /**
+     * i override this fragment lifecycle method
+     * in order to avoid losing movies data in case of
+     * screen rotation and to enhance my app performance
+     * and avoid making more network calls
+     * @param outState
+     */
+    @Override
+    public void onSaveInstanceState(Bundle outState) {
+        super.onSaveInstanceState(outState);
+        Log.d("OnSaveInstance called"," check");
+        if(movies != null){
+            outState.putParcelableArrayList("moviesArrayList", movies);
+        }
+    }
+
     @Override
     public void onStart() {
         super.onStart();
         displayGrid();
-        Log.d("onStart"," i am here");
+    }
 
+    @Override
+    public void onCreate(Bundle savedInstanceState) {
+        super.onCreate(savedInstanceState);
+        setHasOptionsMenu(true);
+        Log.d("onCreate"," i am here");
+    }
+
+    @Override
+    public View onCreateView(LayoutInflater inflater, ViewGroup container,
+                             Bundle savedInstanceState) {
+        Log.d("onCreateView","here");
+        rootView = inflater.inflate(R.layout.fragment_movies, container, false);
+
+        if(savedInstanceState == null || ! savedInstanceState.containsKey("moviesArrayList")){
+            /**
+             * while testing the app , the app used to crash when there is
+             * no available network , so a network check runs first before
+             * running the AsyncTask to get the data from the server
+             */
+        if(checkNetwork()) {
+            displayGrid();
+        }
+        else{
+            Toast.makeText(getActivity(),"there is no network connection",Toast.LENGTH_SHORT).show();
+        }
+
+        }else {
+            movies = savedInstanceState.getParcelableArrayList("moviesArrayList");
+            createComponents();
+
+        }
+        return rootView;
+    }
+
+    private void createComponents() {
+        Log.d("createCoponentsCalled"," check");
+        MovieAdapter adapter = new MovieAdapter(getActivity(),R.layout.grid_item_poster,R.id.grid_item_id,movies);
+        GridView grid = (GridView) rootView.findViewById(R.id.grid_view_id);
+        grid.setAdapter(adapter);
+        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
+            @Override
+            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                showDetails(position);
+            }
+        });
     }
 
     /**
@@ -94,9 +155,11 @@ public class MoviesFragment extends Fragment {
     }
 
     private void showDetails(int position) {
-        Intent intent = new Intent(getActivity(),DetailsActivity.class);
-        intent.putExtra("movie",movies.get(position));
-        startActivity(intent);
+//        Intent intent = new Intent(getActivity(),DetailsActivity.class);
+//        intent.putExtra("movie",movies.get(position));
+//        startActivity(intent);
+        ((Callback)getActivity()).onItemSelected(movies.get(position));
+
     }
 
     /**
@@ -111,78 +174,7 @@ public class MoviesFragment extends Fragment {
         return networkinfo != null && networkinfo.isConnected();
     }
 
-    @Override
-    public void onCreate(Bundle savedInstanceState) {
-        super.onCreate(savedInstanceState);
-        setHasOptionsMenu(true);
-        Log.d("onCreate"," i am here");
-    }
-
-    /**
-     * i override this fragment lifecycle method
-     * in order to avoid losing movies data in case of
-     * screen rotation and to enhance my app performance
-     * and avoid making more network calls
-     * @param outState
-     */
-    @Override
-    public void onSaveInstanceState(Bundle outState) {
-        super.onSaveInstanceState(outState);
-        Log.d("OnSaveInstance called"," check");
-        if(movies != null){
-            outState.putParcelableArrayList("moviesArrayList", movies);
-        }
-    }
-
-    @Override
-    public View onCreateView(LayoutInflater inflater, ViewGroup container,
-                             Bundle savedInstanceState) {
-        Log.d("onCreateView","here");
-        rootView = inflater.inflate(R.layout.fragment_movies, container, false);
-
-        if(savedInstanceState == null || ! savedInstanceState.containsKey("moviesArrayList")){
-            /**
-             * while testing the app , the app used to crash when there is
-             * no available network , so a network check runs first before
-             * running the AsyncTask to get the data from the server
-             */
-        if(checkNetwork()) {
-            displayGrid();
-        }
-        else{
-            Toast.makeText(getActivity(),"there is no network connection",Toast.LENGTH_SHORT).show();
-        }
-
-        }else {
-            movies = savedInstanceState.getParcelableArrayList("moviesArrayList");
-            createComponents();
-
-        }
-        return rootView;
-    }
-
-    private void createComponents() {
-        Log.d("createCoponentsCalled"," check");
-        MovieAdapter adapter = new MovieAdapter(getActivity(),R.layout.grid_item_poster,R.id.grid_item_id,movies);
-        GridView grid = (GridView) rootView.findViewById(R.id.grid_view_id);
-        grid.setAdapter(adapter);
-        grid.setOnItemClickListener(new AdapterView.OnItemClickListener() {
-            @Override
-            public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
-                showDetails(position);
-            }
-        });
-    }
-
-    @Override
-    public void onPause() {
-        super.onPause();
-        Log.d("OnPause ", "called");
-    }
-
-    @Override
-    public void onStop() {
-        super.onStop();
-        Log.d("onStop ","called");
+    public interface Callback{
+        void onItemSelected(Movies movie);
     }
 }

@@ -7,7 +7,7 @@ import android.util.Log;
 import android.view.Menu;
 import android.view.MenuItem;
 
-public class MainActivity extends AppCompatActivity {
+public class MainActivity extends AppCompatActivity implements MoviesFragment.Callback{
 
     boolean mTwoPane;
     private static final String DETAILFRAGMENT_TAG = "DFTAG";
@@ -63,4 +63,25 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    @Override
+    public void onItemSelected(Movies movie) {
+        if(mTwoPane){
+
+            Bundle args = new Bundle();
+            args.putParcelable("movie", movie);
+            DetailsFragment df = new DetailsFragment();
+            df.setArguments(args);
+            Log.d("testt","tablet");
+            getSupportFragmentManager().beginTransaction()
+                    .replace(R.id.details_activity_frame, df, DETAILFRAGMENT_TAG)
+                    .commit();
+
+        }
+        else {
+            Log.d("tablet","test tablet");
+            Intent intent = new Intent(this,DetailsActivity.class);
+            intent.putExtra("movie",movie);
+            startActivity(intent);
+        }
+    }
 }

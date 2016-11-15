@@ -12,8 +12,14 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         if (savedInstanceState == null) {
+            Bundle args = new Bundle();
+            args.putParcelable("movie",getIntent().getData());
+
+            DetailsFragment fragment = new DetailsFragment();
+            fragment.setArguments(args);
+
             getSupportFragmentManager().beginTransaction()
-                    .add(R.id.details_activity_frame, new DetailsFragment())
+                    .add(R.id.details_activity_frame, fragment)
                     .commit();
         }
 
