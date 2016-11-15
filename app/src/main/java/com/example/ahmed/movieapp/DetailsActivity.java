@@ -12,9 +12,10 @@ public class DetailsActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
         setContentView(R.layout.activity_details);
         if (savedInstanceState == null) {
+            Log.d("fixxx","fixxx");
             Bundle args = new Bundle();
-            args.putParcelable("movie",getIntent().getData());
-
+            args.putParcelable("movie",(Movies) getIntent().getParcelableExtra("movie"));
+            Log.d("fixxx", ((Movies) getIntent().getParcelableExtra("movie")).getTitle());
             DetailsFragment fragment = new DetailsFragment();
             fragment.setArguments(args);
 

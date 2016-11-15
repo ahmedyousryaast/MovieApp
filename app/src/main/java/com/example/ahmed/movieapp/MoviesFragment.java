@@ -80,6 +80,7 @@ public class MoviesFragment extends Fragment {
              * running the AsyncTask to get the data from the server
              */
         if(checkNetwork()) {
+            Log.d("test tab" , "test tab");
             displayGrid();
         }
         else{

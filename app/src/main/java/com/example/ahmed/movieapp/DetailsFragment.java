@@ -68,7 +68,7 @@ public class DetailsFragment extends Fragment {
                              Bundle savedInstanceState) {
         // Inflate the layout for this fragment
         rootView = inflater.inflate(R.layout.fragment_details, container, false);
-
+        Log.d("fixxx","fixxx33");
         Bundle args = getArguments();
         if(args == null){
             return null;
@@ -82,6 +82,7 @@ public class DetailsFragment extends Fragment {
 //        }
 
         movie = args.getParcelable("movie");
+        Log.d("fixxx","fixx " + movie.getTitle());
         SharedPreferences sharedPreferences = PreferenceManager.getDefaultSharedPreferences(getActivity());
         String sortMethod = sharedPreferences.getString(getString(R.string.sort_key),getString(R.string.sort_pop));
         if(sortMethod.equals("fav")){
